@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bebas+Neue&family=Cardo:ital,wght@0,400;0,700;1,400&family=Science+Gothic:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton+SC&family=Archivo+Black&family=Bebas+Neue&family=Cardo:ital,wght@0,400;0,700;1,400&family=Science+Gothic:wght@100..900&display=swap');
+
+@import 'tailwindcss';
+
+
+@keyframes heroSlideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.hero-slide-in {
+  opacity: 0;
+  animation: heroSlideInLeft 0.6s ease forwards;
+}
+
+@keyframes headerScrollLeft {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.header-scroll-text {
+  display: inline-block;
+  white-space: nowrap;
+  animation: headerScrollLeft 18s linear infinite;
+  will-change: transform;
+}
+
+h1 {
+  font-family: "Science Gothic", sans-serif;
+}
+h2 {
+  font-family: "Anton SC", sans-serif;
+}
