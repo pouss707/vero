@@ -1,7 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bebas+Neue&family=Cardo:ital,wght@0,400;0,700;1,400&family=Science+Gothic:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Anton+SC&family=Archivo+Black&family=Bebas+Neue&family=Cardo:ital,wght@0,400;0,700;1,400&family=Science+Gothic:wght@100..900&display=swap');
 
 @import 'tailwindcss';
+
+/* Prevent accidental horizontal scroll on small screens */
+html,
+body,
+#root {
+  max-width: 100%;
+  overflow-x: hidden;
+}
 
 
 @keyframes heroSlideInLeft {

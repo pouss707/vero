@@ -1,6 +1,6 @@
-
 import { useEffect, useMemo, useState } from "react";
-import PriceSlider from "../components/CollectionCMP/PriceSlider";
+import FilterPanel from "../components/CollectionCMP/FilterPanel";
+import ProductGrid from "../components/CollectionCMP/ProductGrid";
 import rawProducts from "../data/products.json";
 
 import tshirt from "../assets/tshirt.jpg";
@@ -16,8 +16,7 @@ const products = rawProducts.map((p) => ({
 
 const PRICE_MIN = 0;
 const PRICE_MAX = 200;
-const SIZE_ORDER = ["XS", "S", "M", "L", "XL", "XXL"];
-
+const INITIAL_VISIBLE = 6;
 
 function Collection() {
     const [cart, setCart] = useState(() => {
@@ -35,6 +34,8 @@ function Collection() {
     const [color, setColor] = useState([]);
     const [size, setSize] = useState([]);
     const [sortBy, setSortBy] = useState("featured");
+    const [filtersOpen, setFiltersOpen] = useState(false);
+    const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
 
     useEffect(() => {
         window.localStorage.setItem("vero-cart", JSON.stringify(cart));
@@ -51,17 +52,6 @@ function Collection() {
         () => [...new Set(products.map((product) => product.brand))],
         []
     );
-    const categoryOptions = ["T-Shirts", "Hoodies", "Jackets", "Pants"];
-    const colorOptions = useMemo(
-        () => [
-            { name: "Black", hex: "#000000" },
-            { name: "White", hex: "#ffffff" },
-            { name: "Pink", hex: "#ff9ecb" },
-            { name: "Red", hex: "#ef4444" },
-            { name: "Blue", hex: "#3b82f6" },
-        ],
-        []
-    );
     const genderOptions = useMemo(
         () => [...new Set(products.map((product) => product.gender))],
         []
@@ -76,10 +66,10 @@ function Collection() {
     const handleGenderChange = toggleInArray(setGender);
     const handleSizeChange = toggleInArray(setSize);
     const handleCategoryChange = toggleInArray(setCategory);
+
     const filteredProducts = useMemo(() => {
         const result = products.filter((item) => {
-            const matchesBrand =
-                brands.length === 0 || brands.includes(item.brand);
+            const matchesBrand = brands.length === 0 || brands.includes(item.brand);
             const matchesCategory =
                 category.length === 0 || category.includes(item.category);
             const matchesPrice =
@@ -88,7 +78,14 @@ function Collection() {
             const matchesColor = color.length === 0 || color.includes(item.color);
             const matchesSize = size.length === 0 || size.includes(item.size);
 
-            return matchesBrand && matchesCategory && matchesPrice && matchesGender && matchesColor && matchesSize;
+            return (
+                matchesBrand &&
+                matchesCategory &&
+                matchesPrice &&
+                matchesGender &&
+                matchesColor &&
+                matchesSize
+            );
         });
 
         const sorted = [...result];
@@ -108,13 +105,21 @@ function Collection() {
         return sorted;
     }, [brands, category, color, gender, priceRange, size, sortBy]);
 
+    // Clamp the visible end to the current result set so changing filters
+    // naturally shrinks the view (no setState-in-effect needed).
+    const visibleEnd = Math.min(visibleCount, filteredProducts.length);
+    const visibleProducts = filteredProducts.slice(0, visibleEnd);
+    const hasMore = visibleEnd < filteredProducts.length;
+
     const addToCart = (product) => {
         setCart((prevCart) => {
             const existingItem = prevCart.find((item) => item.id === product.id);
 
             if (existingItem) {
                 return prevCart.map((item) =>
-                    item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+                    item.id === product.id
+                        ? { ...item, quantity: item.quantity + 1 }
+                        : item
                 );
             }
 
@@ -132,12 +137,29 @@ function Collection() {
         setSortBy("featured");
     };
 
+    const filterPanelProps = {
+        brands,
+        category,
+        priceRange,
+        gender,
+        color,
+        size,
+        brandOptions,
+        genderOptions,
+        onBrandChange: handleBrandChange,
+        onCategoryChange: handleCategoryChange,
+        onGenderChange: handleGenderChange,
+        onColorChange: handleColorChange,
+        onSizeChange: handleSizeChange,
+        onPriceChange: setPriceRange,
+        priceMin: PRICE_MIN,
+        priceMax: PRICE_MAX,
+    };
+
     return (
-        <section className="min-h-screen bg-black  py-10 text-black pr-10 pl-10">
-
-
+        <section className="min-h-screen bg-black py-8 sm:py-10 px-4 sm:px-6 lg:px-10">
             <div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
-                <aside className=" bg-black  ml-0">
+                <aside className="hidden lg:block bg-black ml-0">
                     <div className="mb-8 space-y-3">
                         <p className="text-xs uppercase tracking-[0.35em] text-white">collection</p>
                         <h2 className="text-4xl font-semibold sm:text-5xl text-red-700">SHOP ALL</h2>
@@ -156,131 +178,22 @@ function Collection() {
                         </button>
                     </div>
 
-                    <div className="space-y-5">
-                        <label className="block">
-                            <h1 className="mb-3 block text-sm font-medium text-red-700">Category</h1>
-                            <div className="space-y-2">
-                                {categoryOptions.map((cat) => (
-                                    <label
-                                        key={cat}
-                                        className="flex items-center gap-3 cursor-pointer"
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            className="peer sr-only"
-                                            checked={category.includes(cat)}
-                                            onChange={() => handleCategoryChange(cat)}
-                                        />
-                                        <span className="w-4 h-4 ml-5 border border-white bg-black transition-all duration-200 peer-checked:bg-red-700"></span>
-                                        <span className="text-white">{cat}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        </label>
-
-                        <label className="block">
-                            <h1 className="mb-3 block text-sm font-medium text-red-700">Brands</h1>
-                            <div className="space-y-2">
-                                {brandOptions.map((brand) => (
-                                    <label
-                                        key={brand}
-                                        className="flex items-center gap-3 cursor-pointer"
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            className="peer sr-only"
-                                            checked={brands.includes(brand)}
-                                            onChange={() => handleBrandChange(brand)}
-                                        />
-                                        <span className="w-4 h-4 ml-5 border border-white bg-black transition-all duration-200 peer-checked:bg-red-700"></span>
-                                        <span className="text-white">{brand}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        </label>
-                        <label className="block">
-                            <h1 className="mb-3 block text-sm font-medium text-red-700">Gender</h1>
-                            <div className="space-y-2">
-                                {genderOptions.map((g) => (
-                                    <label
-                                        key={g}
-                                        className="flex items-center gap-3 cursor-pointer"
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            className="peer sr-only"
-                                            checked={gender.includes(g)}
-                                            onChange={() => handleGenderChange(g)}
-                                        />
-                                        <span className="w-4 h-4 ml-5 border border-white bg-black transition-all duration-200 peer-checked:bg-red-700"></span>
-                                        <span className="text-white">{g}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        </label>
-                        <label className="block">
-                            <h1 className="mb-3 block text-sm font-medium text-red-700">Color</h1>
-                            <div className="space-y-2">
-                                {colorOptions.map((c) => (
-                                    <label
-                                        key={c.name}
-                                        className="flex items-center gap-3 cursor-pointer ml-5"
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            className="peer sr-only"
-                                            checked={color.includes(c.name)}
-                                            onChange={() => handleColorChange(c.name)}
-                                        />
-                                        <span
-                                            className="w-5 h-5 border border-gray-50 transition-all duration-200 peer-checked:ring-2 peer-checked:ring-red-700 peer-checked:ring-offset-2 peer-checked:ring-offset-black"
-                                            style={{ backgroundColor: c.hex }}
-                                        ></span>
-                                        <h1 className="text-white text-sm">{c.name}</h1>
-                                    </label>
-                                ))}
-                            </div>
-                        </label>
-                        <label className="block">
-                            <h1 className="mb-3 block text-sm font-medium text-red-700">Size</h1>
-                            <div className="grid grid-cols-3 gap-2 w-48 ml-5">
-                                {SIZE_ORDER.map((s) => {
-                                    const active = size.includes(s);
-                                    return (
-                                        <button
-                                            key={s}
-                                            type="button"
-                                            onClick={() => handleSizeChange(s)}
-                                            className={
-                                                "flex h-10 items-center justify-center  border text-sm font-medium transition-all duration-200 cursor-pointer " +
-                                                (active
-                                                    ? "border-red-700 bg-red-700 text-white"
-                                                    : "border-white/40 bg-black text-white hover:border-white")
-                                            }
-                                        >
-                                            {s}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </label>
-                        <label className="block">
-                            <h1 className="mb-3 block text-sm font-medium text-red-700">Price</h1>
-                            <PriceSlider
-                                min={PRICE_MIN}
-                                max={PRICE_MAX}
-                                value={priceRange}
-                                onChange={setPriceRange}
-                            />
-                        </label>
-
-                    </div>
+                    <FilterPanel {...filterPanelProps} />
                 </aside>
 
-                <div className="mt-21 mx-5">
-                    <div className="mb-8 flex justify-between items-center gap-3  bg-black  ">
-                        <div>
-                            <h1 className="text-sm font-semibold text-white">{filteredProducts.length} styles available</h1>
+                <div className="mt-0">
+                    <div className="mb-8 flex flex-wrap justify-between items-center gap-3 bg-black">
+                        <div className="flex items-center gap-3">
+                            <button
+                                type="button"
+                                onClick={() => setFiltersOpen(true)}
+                                className="lg:hidden flex items-center gap-2 border border-white/40 px-4 py-2 text-sm text-white cursor-pointer"
+                            >
+                                Filters
+                            </button>
+                            <h1 className="text-sm font-semibold text-white">
+                                {filteredProducts.length} styles available
+                            </h1>
                         </div>
                         <label className="text-sm font-medium text-white">
                             Sort by:
@@ -297,34 +210,45 @@ function Collection() {
                         </label>
                     </div>
 
-                    <div className="grid gap-6 grid-cols-3 ">
-                        {filteredProducts.map((product) => (
-                            <article key={product.id} className="overflow-hidden h-110 bg-white shadow-sm">
-                                <img src={product.image} alt={product.name} className="h-[80%] w-full object-cover" />
-                                <div className="space-y-4 py-1  bg-black">
-                                    <div className="flex items-center justify-between px-3 gap-3 mt-2">
-                                        <h1 className="text-sm font-semibold text-white">{product.name}</h1>
-                                        <h1 className="text-sm font-semibold text-white">${product.price}</h1>
-                                    </div>
-                                    <button
-                                        type="button"
-                                        onClick={() => addToCart(product)}
-                                        className="w-full bg-white px-4 py-3 text-sm font-medium flex justify-center items-center text-black transition hover:bg-red-700"
-                                    >
-                                        Add to cart
-                                    </button>
-                                </div>
-                            </article>
-                        ))}
-                    </div>
-
-                    {filteredProducts.length === 0 && (
-                        <div className="p-8 text-center text-sm text-white">
-                            No pieces match those filters yet. Try a broader combination.
-                        </div>
-                    )}
+                    <ProductGrid
+                        products={visibleProducts}
+                        totalCount={filteredProducts.length}
+                        hasMore={hasMore}
+                        onLoadMore={() => setVisibleCount((count) => count + INITIAL_VISIBLE)}
+                        onAddToCart={addToCart}
+                    />
                 </div>
             </div>
+
+            {/* Mobile / tablet filter drawer */}
+            {filtersOpen && (
+                <div className="fixed inset-0 z-60 lg:hidden">
+                    <div
+                        className="absolute inset-0 bg-black/70"
+                        onClick={() => setFiltersOpen(false)}
+                    />
+                    <div className="absolute top-0 left-0 h-full w-80 max-w-[85%] bg-black overflow-y-auto p-6">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-2xl font-semibold text-red-700">Filters</h2>
+                            <button
+                                type="button"
+                                onClick={() => setFiltersOpen(false)}
+                                className="text-sm text-white underline cursor-pointer"
+                            >
+                                Close
+                            </button>
+                        </div>
+                        <FilterPanel {...filterPanelProps} />
+                        <button
+                            type="button"
+                            onClick={resetFilters}
+                            className="mt-6 w-full border border-white/40 px-4 py-2 text-sm text-white cursor-pointer"
+                        >
+                            Reset all
+                        </button>
+                    </div>
+                </div>
+            )}
         </section>
     );
 }

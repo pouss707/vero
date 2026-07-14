@@ -22,11 +22,11 @@ function Hero() {
             {/* Overlay panel */}
             <div className="absolute top-0 left-0 h-full w-full flex items-center">
                 <div
-                    className=" p-8 pl-10 pt-20 w-full text-[#F5F5F5] "
+                    className=" p-6 sm:p-8 sm:pl-10 pt-24 sm:pt-20 w-full text-[#F5F5F5] "
                 >
-                    <h1 className="text-2xl text-left  mb-4">WELCOME TO</h1>
-                    <h2 className="text-9xl font-extrabold text-left text-[170px] mb-4 hero-slide-in text-red-700">Fashion</h2>
-                    <h2 className="text-9xl font-extrabold text-left text-[170px] mb-4 hero-slide-in text-red-700"
+                    <h1 className="text-xl sm:text-2xl text-left  mb-4">WELCOME TO</h1>
+                    <h2 className="text-6xl sm:text-8xl md:text-9xl font-extrabold text-left mb-4 hero-slide-in text-red-700 leading-none">Fashion</h2>
+                    <h2 className="text-6xl sm:text-8xl md:text-9xl font-extrabold text-left mb-4 hero-slide-in text-red-700 leading-none"
                         style={{ animationDelay: "300ms" }}
                     >
                         World
