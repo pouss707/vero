@@ -1,26 +1,24 @@
-function ProductCard({ product, onAddToCart }) {
+import { Link } from "react-router-dom";
+
+function ProductCard({ product }) {
     return (
-        <article className="overflow-hidden h-80 sm:h-110 bg-white shadow-sm">
-            <img
-                src={product.image}
-                alt={product.name}
-                className="h-[80%] w-full object-cover"
-            />
-            <div className="space-y-4 py-1 bg-black">
-                <div className="flex items-center justify-between px-3 gap-3 mt-2">
-                    <h1 className="text-sm font-semibold text-white">{product.name}</h1>
-                    <h1 className="text-sm font-semibold text-white">${product.price}</h1>
+        <Link to="/product">
+            <article className="overflow-hidden h-100 w-65  bg-white shadow-sm flex flex-col justify-between">
+                <img
+                    src={product.image}
+                    alt={product.name}
+                    className="h-[95%] w-full object-cover"
+                />
+                <div className="space-y-4 py-1 bg-black ">
+                    <div className="flex items-center justify-between px-3 gap-3 mt-2">
+                        <h1 className="text-sm font-semibold text-white">{product.name}</h1>
+                        <h1 className="text-sm font-semibold text-white">${product.price}</h1>
+                    </div>
                 </div>
-                <button
-                    type="button"
-                    onClick={() => onAddToCart(product)}
-                    className="w-full bg-white px-4 py-3 text-sm font-medium flex justify-center items-center text-black transition hover:bg-red-700"
-                >
-                    Add to cart
-                </button>
-            </div>
-        </article>
+            </article>
+        </Link>
     );
 }
+
 
 export default ProductCard;

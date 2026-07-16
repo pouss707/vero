@@ -16,7 +16,7 @@ const products = rawProducts.map((p) => ({
 
 const PRICE_MIN = 0;
 const PRICE_MAX = 200;
-const INITIAL_VISIBLE = 6;
+const INITIAL_VISIBLE = 12;
 
 function Collection() {
     const [cart, setCart] = useState(() => {
@@ -181,7 +181,7 @@ function Collection() {
                     <FilterPanel {...filterPanelProps} />
                 </aside>
 
-                <div className="mt-0">
+                <div className="mt-21">
                     <div className="mb-8 flex flex-wrap justify-between items-center gap-3 bg-black">
                         <div className="flex items-center gap-3">
                             <button
