@@ -5,6 +5,7 @@ import pic2 from "../../assets/pic2.png";
 import pic3 from "../../assets/pic3.png";
 
 import { FaArrowRight } from "react-icons/fa";
+import LazyImage from "../LazyImage";
 
 
 function About() {
@@ -30,10 +31,10 @@ function About() {
                     </Link>
                 </div>
                 <div className="flex flex-col sm:flex-row justify-center items-center gap-2 mr-0 sm:mr-11 mt-8 lg:mt-0">
-                    <img src={pic1} alt="" className="w-full sm:w-90 h-64 sm:h-155 object-cover" />
+                    <LazyImage src={pic1} alt="" className="w-full sm:w-90 h-64 sm:h-155 object-cover" />
                     <div className="flex flex-col justify-between items-center gap-2 w-full sm:w-auto">
-                        <img src={pic2} alt="" className="w-full sm:w-80 h-48 sm:h-113 object-cover" />
-                        <img src={pic3} alt="" className="w-full sm:w-80 h-40 object-cover" />
+                        <LazyImage src={pic2} alt="" className="w-full sm:w-80 h-48 sm:h-113 object-cover" />
+                        <LazyImage src={pic3} alt="" className="w-full sm:w-80 h-40 object-cover" />
                     </div>
                 </div>
             </div>

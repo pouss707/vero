@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
+import LazyImage from "../LazyImage";
 
 function ProductCard({ product }) {
     return (
-        <Link to="/product">
+        <Link to={`/product/${product.id}`}>
             <article className="overflow-hidden h-100 w-65  bg-white shadow-sm flex flex-col justify-between">
-                <img
+                <LazyImage
                     src={product.image}
                     alt={product.name}
                     className="h-[95%] w-full object-cover"

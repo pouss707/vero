@@ -1,5 +1,6 @@
 import pic2 from "../assets/pic2.png"
 import pic4 from "../assets/pic4.png"
+import LazyImage from "../components/LazyImage";
 import { AiOutlineRuby } from "react-icons/ai";
 import { PiCoatHangerBold } from "react-icons/pi";
 import { TbWorld } from "react-icons/tb";
@@ -14,12 +15,12 @@ function About() {
                     <p>At VERO, we believe style is more than what you wear- it's how you carry yourself. Our pieces are designed to empower confidence, express individuality, and elevate everyday moments.</p>
                 </div>
                 <div className="w-full lg:w-[50%] h-[40vh] lg:h-full">
-                    <img src={pic2} alt="" className="w-full h-full object-cover" />
+                    <LazyImage src={pic2} alt="" className="w-full h-full object-cover" />
                 </div>
             </section>
             <section className="min-h-screen w-full bg-white flex items-center flex-col-reverse lg:flex-row">
                 <div className="w-full lg:w-[50%] h-[40vh] lg:h-full">
-                    <img src={pic4} alt="" className="w-full h-full object-cover" />
+                    <LazyImage src={pic4} alt="" className="w-full h-full object-cover" />
                 </div>
                 <div className="flex flex-col justify-center items-start gap-5 w-full lg:w-[50%] h-full pl-4 sm:pl-10 py-16 text-black">
                     <h1>OUR STORY</h1>

@@ -6,6 +6,7 @@ import hoodie from "../../assets/hoodie.png"
 import pants from "../../assets/pants.png"
 import jacket from "../../assets/jacket.png"
 import { FaArrowRight } from "react-icons/fa";
+import LazyImage from "../LazyImage";
 
 const items = [
     { name: "T-shirts", img: tshirt },
@@ -27,7 +28,7 @@ function Collection() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full px-4 sm:px-10 mt-10 place-items-center">
                 {items.map((item) => (
                     <div key={item.name} className="relative w-full h-80 sm:h-110 flex justify-center items-end overflow-hidden rounded-lg">
-                        <img src={item.img} alt={item.name} className="h-full w-full object-contain" />
+                        <LazyImage src={item.img} alt={item.name} className="h-full w-full object-contain" />
                         <div className="absolute flex flex-col justify-center items-start gap-2 text-white pb-5 px-4">
                             <h1 className="text-xl">{item.name}</h1>
                             <Link to="/collection">

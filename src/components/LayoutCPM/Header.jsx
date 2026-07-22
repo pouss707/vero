@@ -18,7 +18,8 @@ function Header() {
         { to: "/about", label: "About" },
         { to: "/collection", label: "Collection" },
         { to: "/cart", label: "Cart" },
-        { to: "/auth", label: "Login" },
+        { to: "/login", label: "Login" },
+        { to: "/register", label: "Register" },
     ];
 
     return (
@@ -52,7 +53,7 @@ function Header() {
 
                 {/* Right zone — cart always; account + search only in window mode */}
                 <div className="flex items-center gap-4 sm:gap-6 z-10">
-                    <Link to="/auth" aria-label="Account" className="hidden lg:block">
+                    <Link to="/login" aria-label="Account" className="hidden lg:block">
                         <IoPerson className="text-2xl text-[#F5F5F5]" />
                     </Link>
                     <FaSearch className="hidden lg:block text-2xl text-[#F5F5F5] cursor-pointer" />
@@ -92,7 +93,7 @@ function Header() {
                         ))}
                         <div className="mt-4 flex items-center gap-6">
                             <Link
-                                to="/auth"
+                                to="/login"
                                 onClick={() => setNavOpen(false)}
                                 aria-label="Account"
                                 className="flex items-center gap-2 text-sm hover:text-red-700 transition-colors"

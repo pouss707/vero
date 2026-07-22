@@ -1,23 +1,41 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
-
 import video from '../../assets/video.mp4';
+import poster from '../../assets/pic1.png';
 import { FaArrowRight } from "react-icons/fa";
 
 
-
 function Hero() {
+    const [videoReady, setVideoReady] = useState(false);
+
     return (
         <section className="relative h-screen w-full overflow-hidden bg-black">
-            {/* Video background */}
+            {/* Video background.
+                preload="metadata" avoids downloading the full ~17MB clip on load;
+                it streams only once playback starts. Fades in when it can play. */}
             <video
-                className="absolute top-0 left-0 w-full h-full object-cover"
+                className={
+                    "absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 " +
+                    (videoReady ? "opacity-100" : "opacity-0")
+                }
                 src={video}
+                poster={poster}
+                preload="metadata"
                 autoPlay
                 loop
                 muted
                 playsInline
+                onCanPlay={() => setVideoReady(true)}
             />
+            {/* Poster fallback so there is never a blank/black flash before play. */}
+            {!videoReady && (
+                <img
+                    src={poster}
+                    alt=""
+                    className="absolute top-0 left-0 w-full h-full object-cover"
+                />
+            )}
 
             {/* Overlay panel */}
             <div className="absolute top-0 left-0 h-full w-full flex items-center">
